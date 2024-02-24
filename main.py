@@ -13,14 +13,14 @@ def main():
     response = get(url)
 
     user_items = []  # Lista przechowująca słownik
-
+    nationality = ['CA', 'DK', 'FI', 'GB', 'IE', 'NL', 'NO', 'US']
     # Parsowanie danych JSON
     data = loads(response.text)
 
     # Sprawdzenie, czy klucz 'results' istnieje w danych
     if 'results' in data:
         for row in data['results']:
-            if row['nat'] in ('CA', 'DK', 'FI', 'GB', 'IE', 'NL', 'NO', 'US'):
+            if row['nat'] in nationality:
                 user_items.append(row)  # Dodanie użytkownika do listy user_items
 
     # Iteracja przez elementy user_items
