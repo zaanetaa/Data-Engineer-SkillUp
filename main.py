@@ -6,9 +6,10 @@
 from requests import get
 from json import loads
 from datetime import datetime
+import time
 
 
-def main():
+def fetch_random_users():
     url = "https://randomuser.me/api"
     response = get(url)
 
@@ -22,6 +23,17 @@ def main():
         for row in data['results']:
             if row['nat'] in nationality:
                 user_items.append(row)  # Dodanie użytkownika do listy user_items
+    return user_items
+
+def main():
+    users_number =4
+    user_items=[]
+    for _ in range(users_number): #nie interesuje nas wartość iteratora a ilość iteracji
+        fetched_users= fetch_random_users()
+        user_items.extend(fetched_users)
+        time.sleep(5)
+
+
 
     # Iteracja przez elementy user_items
     for user_item in user_items:
