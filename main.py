@@ -7,7 +7,12 @@ from requests import get
 from json import loads
 from datetime import datetime
 import time
+import csv
 
+
+now = datetime.now()
+file_name = now.strftime("%d_%m_%Y_%H_%M_%S")
+print(file_name)
 
 def fetch_random_users():
     url = "https://randomuser.me/api"
@@ -31,7 +36,7 @@ def main():
     for _ in range(users_number): #nie interesuje nas wartość iteratora a ilość iteracji
         fetched_users= fetch_random_users()
         user_items.extend(fetched_users)
-        time.sleep(5)
+        time.sleep(20)
 
 
 
