@@ -1,6 +1,11 @@
 # Interesują nas tylko informacje: uuid (z loginu), imię, nazwisko, login, hasło, e-mail, data rejestracji.
 # Interesują nas tylko osoby z narodowościami: CA, DK, FI, GB, IE, NL, NO, US
 # Data rejestracji zostanie zapisana w formacie: YYYY/mm/dd HH:MM
+# Na koniec zapisujemy nasze dane do pliku, którego format możemy wybrać w funkcji. Dostępne opcje to: txt i csv.
+#
+# Dla csv zapisujemy dane z separatorem ";" oraz z nagłówkiem.
+# Dla txt zapisujemy dane z separatorem oraz bez nagłówka.
+# Nazwa pliku jest zgodna z formatem: <yyyy_mm_dd_HH_MM_SS>.<csv|txt>
 
 
 from requests import get
@@ -37,9 +42,11 @@ def main():
         time.sleep(20)
 
     now = datetime.now()
-    file_name = now.strftime("%d_%m_%Y_%H_%M_%S")+ ".csv"
-    with open(file_name, 'w', newline = '') as output_csv: #output_csv jest zmienną, która przechowuje uchwyt pliku do pliku CSV,
-        writer = csv.writer(output_csv) # Utwórz obiekt writer dla pliku CSV
+    file_name_csv = now.strftime("%d_%m_%Y_%H_%M_%S")+ ".csv"
+    file_name_txt = now.strftime("%d_%m_%Y_%H_%M_%S") + ".txt"
+    with open(file_name_csv, 'w', newline = '') as output_csv: #output_csv jest zmienną, która przechowuje uchwyt pliku do pliku CSV,
+        writer = csv.writer(output_csv, delimiter=';') # Utwórz obiekt writer dla pliku CSV
+        writer.writerow(['UUID','Imię','Nazwisko','Login','Hasło','E-mail','Narodowość','Data rejestracji']) #nagłówki dla csvd
 
     # Iteracja przez elementy user_items
         for user_item in user_items:
@@ -55,6 +62,22 @@ def main():
                 datetime.strptime(user_item['registered']['date'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y/%m/%d %H:%M:%S")
         #parsowanie łańcucha znaków reprezentujące date i czas na obiekt 'datetime'
 ])
+    with open(file_name_txt, 'w', newline='') as output_txt:
+                # Iteracja przez elementy user_items i zapis danych do pliku TXT
+        for user_item in user_items:
+            output_txt.write(';'.join([
+                user_item['login']['uuid'],  # UUID z loginu
+                user_item['name']['first'],  # Imię
+                user_item['name']['last'],  # Nazwisko
+                user_item['login']['username'],  # Login
+                user_item['login']['password'],  # Hasło
+                user_item['email'],  # E-mail
+                user_item['nat'],  # Narodowość
+                datetime.strptime(user_item['registered']['date'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y/%m/%d %H:%M:%S")]) + '\n')
+
+
+
+
             print("UUID:", user_item['login']['uuid'])  # UUID z loginu
             print("Imię:", user_item['name']['first'])  # Imię
             print("Nazwisko:", user_item['name']['last'])  # Nazwisko
